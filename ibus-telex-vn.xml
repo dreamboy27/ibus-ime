@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component>
+    <name>org.freedesktop.IBus.TelexVN</name>
+    <description>Dreamtiano's Telex Input Method Engine</description>
+    <exec>/usr/lib/ibus/ibus-telex-vn</exec>
+    <version>1.0.0</version>
+    <license>GPL</license>
+    <author>Dreamtiano</author>
+    <homepage>https://github.com/yourusername/ibus-telex</homepage>
+    <textdomain>ibus-telex-vn</textdomain>
+    
+    <engines>
+        <engine>
+            <symbol>vi</symbol>
+            <name>telex</name>
+            <longname>Dream Telex Input Method</longname>
+            <description>Dreamtiano's Telex Input Method Engine</description>
+            <language>vi</language>
+            <license>GPL</license>
+            <author>Dreamtiano</author>
+            <layout>us</layout>
+            <rank>20</rank>
+        </engine>
+    </engines>
+</component>

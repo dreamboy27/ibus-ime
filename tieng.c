@@ -37,7 +37,7 @@ static void init_validation_tables() {
         "a", "ă", "â", "i", "y", "o", "ô", "ơ", "e", "ê", "u", "ư",
 
         "ai", "ao", "au", "ay", "âu", "ây", "ia", "iê", "yê", "êu", "eo", "iu", "oa", "oe", "oă", "oi", "oo", "ôô", "ơi",
-        "ua", "ue", "uâ", "uă", "ui", "ưi", "uo", "ươ", "ưu", "uơ", "uy",
+        "ua", "ue", "uâ", "ưa", "ui", "ưi", "uo", "ươ", "ưu", "uơ", "uy",
 
         "oai", "oao", "uao", "oeo", "iêu", "yêu", "uôi", "ươu", "uyu", "uyê", "oay", "uây", "ươi"
     };

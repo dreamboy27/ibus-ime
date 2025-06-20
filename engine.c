@@ -106,11 +106,12 @@ ibus_telex_engine_process_key_event(IBusEngine *engine,
 {
     IBusTelexEngine *telex = (IBusTelexEngine *)engine;
 
+    if (!telex->enabled)
+        return FALSE;
+
     if (modifiers & IBUS_RELEASE_MASK)
         return FALSE;
 
-    if (!telex->enabled)
-        return FALSE;
 
     if (modifiers & (IBUS_CONTROL_MASK | IBUS_MOD1_MASK))
         return FALSE;
@@ -118,7 +119,7 @@ ibus_telex_engine_process_key_event(IBusEngine *engine,
     switch (keyval) {
         case IBUS_KEY_space:
             if (telex->in_composition) {
-                ibus_telex_engine_commit_text(telex);
+                ibus_telex_engine_commit_text_with_space(telex);
                 return TRUE;
             }
             return FALSE;
@@ -127,16 +128,8 @@ ibus_telex_engine_process_key_event(IBusEngine *engine,
         case IBUS_KEY_KP_Enter:
             if (telex->in_composition) {
                 ibus_telex_engine_commit_text(telex);
-                return TRUE;
             }
             return FALSE;
-
-        // case IBUS_KEY_Escape:
-        //     if (telex->in_composition) {
-        //         ibus_telex_engine_clear_preedit_text(telex);
-        //         return TRUE;
-        //     }
-        //     return FALSE;
 
         case IBUS_KEY_BackSpace:
             if (telex->in_composition) return ibus_telex_engine_handle_backspace(telex);
@@ -150,12 +143,10 @@ ibus_telex_engine_process_key_event(IBusEngine *engine,
             else if (keyval >= IBUS_KEY_A && keyval <= IBUS_KEY_Z) {
                 return ibus_telex_engine_handle_character(telex, keyval + 32); // Convert to lowercase
             }
-            break;
     }
 
     if (telex->in_composition) {
         ibus_telex_engine_commit_text(telex);
-        return FALSE;
     }
 
     return FALSE;
@@ -256,6 +247,20 @@ ibus_telex_engine_cursor_down(IBusEngine *engine)
 /* Helper functions */
 static void
 ibus_telex_engine_commit_text(IBusTelexEngine *telex)
+{
+    gchar *raw = tieng_to_string(telex->tieng);
+    gchar *buffer = g_utf8_normalize(raw, -1, G_NORMALIZE_NFC);
+    if (telex->tieng && g_utf8_strlen(buffer, - 1) > 0) {
+        IBusText *text = ibus_text_new_from_string(buffer);
+        ibus_engine_commit_text((IBusEngine *)telex, text);
+    }
+    g_free(buffer);
+    g_free(raw);
+    ibus_telex_engine_clear_buffer(telex);
+}
+
+static void
+ibus_telex_engine_commit_text_with_space(IBusTelexEngine *telex)
 {
     gchar *raw = tieng_to_string(telex->tieng);
     gchar *new_str = g_strconcat(raw, " ", NULL);

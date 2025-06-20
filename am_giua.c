@@ -294,19 +294,27 @@ gchar** am_giua_get_am_giua(AmGiua *am_giua) {
     }
 
     if (am_giua->dau_am == 'w') {
-        int cnt_u = 0, cnt_o = 0;
-        for (int i = 0; i < g_utf8_strlen(res->str, -1); i++) {
-            if (gstring_utf8_char_equal(res, i, 'a') && cnt_u == 0 && cnt_o == 0) {
-                gstring_utf8_char_set(res, i, g_utf8_get_char("ă"));
-            }
-            if (gstring_utf8_char_equal(res, i, 'u') && cnt_u == 0) {
-                gstring_utf8_char_set(res, i, g_utf8_get_char("ư"));
-                cnt_u++;
-            }
-            if (gstring_utf8_char_equal(res, i, 'o') && cnt_o == 0) {
-                gstring_utf8_char_set(res, i, g_utf8_get_char("ơ"));
-                cnt_o++;
-            }
+        const gchar *str = res->str;
+        if (g_strcmp0(str, "a") == 0) {
+            g_string_assign(res, "ă");
+        } else if (g_strcmp0(str, "o") == 0) {
+            g_string_assign(res, "ơ");
+        } else if (g_strcmp0(str, "u") == 0) {
+            g_string_assign(res, "ư");
+        } else if (g_strcmp0(str, "uo") == 0) {
+            g_string_assign(res, "ươ");
+        } else if (g_strcmp0(str, "ua") == 0) {
+            g_string_assign(res, "ưa");
+        } else if (g_strcmp0(str, "oa") == 0) {
+            g_string_assign(res, "oă");
+        } else if (g_strcmp0(str, "uu") == 0) {
+            g_string_assign(res, "ưu");
+        } else if (g_strcmp0(str, "uou") == 0) {
+            g_string_assign(res, "ươu");
+        } else if (g_strcmp0(str, "uoi") == 0) {
+            g_string_assign(res, "ươi");
+        } else {
+            am_giua->append = g_string_append(am_giua->append, "w");
         }
     }
 

@@ -69,6 +69,7 @@ void ibus_telex_engine_cursor_down(IBusEngine *engine);
 
 /* Helper functions */
 static void ibus_telex_engine_commit_text(IBusTelexEngine *telex);
+static void ibus_telex_engine_commit_text_with_space(IBusTelexEngine *telex);
 static void ibus_telex_engine_clear_buffer(IBusTelexEngine *telex);
 static gboolean ibus_telex_engine_handle_backspace(IBusTelexEngine *telex);
 static gboolean ibus_telex_engine_handle_character(IBusTelexEngine *telex, guint keyval);

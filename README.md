@@ -20,7 +20,7 @@ This input method currently only supports basic Vietnamese typing using the Tele
 ```
 ibus exit             # stop the current ibus daemon
 make clean install    # build and install the engine
-bus-daemon -drx      # restart ibus
+ibus-daemon -drx      # restart ibus
 ibus-setup
 ```
 

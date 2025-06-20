@@ -303,6 +303,8 @@ gchar** am_giua_get_am_giua(AmGiua *am_giua) {
             g_string_assign(res, "ư");
         } else if (g_strcmp0(str, "uo") == 0) {
             g_string_assign(res, "ươ");
+        } else if (g_strcmp0(str, "oi") == 0) {
+            g_string_assign(res, "ơi"); 
         } else if (g_strcmp0(str, "ua") == 0) {
             g_string_assign(res, "ưa");
         } else if (g_strcmp0(str, "oa") == 0) {

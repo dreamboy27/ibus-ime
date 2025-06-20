@@ -105,10 +105,14 @@ void am_giua_handle_normal_key(AmGiua *am_giua, gchar c) {
             g_string_append_c(am_giua->append, 'w');
         }
     } else {
-        gchar *new_str = g_strdup_printf("%s%c", am_giua->nguyen_am_goc->str, c);
-        g_string_free(am_giua->nguyen_am_goc, TRUE);
-        am_giua->nguyen_am_goc = g_string_new(new_str);
-        g_free(new_str);
+        if (am_giua->am_cuoi->len > 0) {
+            am_giua->append = g_string_append_c(am_giua->append, c);
+        } else {
+            gchar *new_str = g_strdup_printf("%s%c", am_giua->nguyen_am_goc->str, c);
+            g_string_free(am_giua->nguyen_am_goc, TRUE);
+            am_giua->nguyen_am_goc = g_string_new(new_str);
+            g_free(new_str);
+        }
     }
 }
 
@@ -344,6 +348,7 @@ gchar** am_giua_get_am_giua(AmGiua *am_giua) {
                 else if (gstring_utf8_char_equal(res, index, g_utf8_get_char("ô")))
                     gstring_utf8_char_set(res, index, g_utf8_get_char("ỗ"));
                 break;
+
             case 'j':
                 if (gstring_utf8_char_equal(res, index, g_utf8_get_char("â")))
                     gstring_utf8_char_set(res, index, g_utf8_get_char("ậ"));
@@ -356,11 +361,11 @@ gchar** am_giua_get_am_giua(AmGiua *am_giua) {
         }
     } else {
         index = (g_utf8_strlen(am_giua->nguyen_am_goc->str, -1) + g_utf8_strlen(am_giua->am_cuoi->str, -1) - 1) / 2;
-        if (index >= res->len) index = res->len - 1;
+        if (index >= g_utf8_strlen(am_giua->nguyen_am_goc->str, -1)) index = g_utf8_strlen(am_giua->nguyen_am_goc->str, -1) - 1;
 
         switch (am_giua->thanh) {
             case 's':
-                if (gstring_utf8_char_equal(res, index, 'a')) 
+                if (gstring_utf8_char_equal(res, index, 'a'))
                     gstring_utf8_char_set(res, index, g_utf8_get_char("á"));
                 else if (gstring_utf8_char_equal(res, index, 'e')) 
                     gstring_utf8_char_set(res, index, g_utf8_get_char("é"));

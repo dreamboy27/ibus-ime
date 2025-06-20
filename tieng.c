@@ -183,7 +183,6 @@ void tieng_append(Tieng *tieng, gchar c) {
                     g_free(str[1]);
                     g_free(str);
                 } else {
-                    g_print("THEREHREHRHERHE");
                     tieng->valid = false;
                 }
                 am_giua_free(temp);
@@ -202,6 +201,48 @@ void tieng_append(Tieng *tieng, gchar c) {
         }
     }
 }
+
+void tieng_backspace(Tieng *tieng) {
+    if (tieng->valid == false) {
+        g_string_truncate(tieng->word, tieng->word->len - 1);
+        return;
+    }
+    if (tieng->cur == 2) {
+        g_string_truncate(tieng->am_cuoi, tieng->am_cuoi->len - 1);
+        am_giua_set_am_cuoi(tieng->am_giua, tieng->am_cuoi);
+        if (tieng->am_cuoi->len == 0) {
+            tieng->cur = 1;
+        }
+    } else if (tieng->cur == 1) {
+        if (tieng->am_giua->nguyen_am_goc->len == 1) {
+            g_string_truncate(tieng->am_giua->nguyen_am_goc, 0);
+            g_string_free(tieng->am_giua->append, TRUE);
+            tieng->am_giua->append = g_string_new("");
+            tieng->am_giua->dau_am = '\0';
+            tieng->am_giua->thanh = '\0';
+            tieng->cur = 0;
+        } 
+        else {
+            if (tieng->am_giua->nguyen_am_goc->str[tieng->am_giua->nguyen_am_goc->len - 1] 
+                    == tieng->am_giua->dau_am) {
+                g_string_truncate(tieng->am_giua->nguyen_am_goc, tieng->am_giua->nguyen_am_goc->len - 1);
+                tieng->am_giua->dau_am = '\0';
+            } 
+            else if (tieng->am_giua->dau_am == 'w') {
+                g_string_truncate(tieng->am_giua->nguyen_am_goc, tieng->am_giua->nguyen_am_goc->len - 1);
+                tieng->am_giua->w_index = g_array_remove_index(tieng->am_giua->w_index, tieng->am_giua->w_index->len - 1);
+            }
+            else {
+                g_string_truncate(tieng->am_giua->nguyen_am_goc, tieng->am_giua->nguyen_am_goc->len - 1);
+            }
+        }
+    } else if (tieng->cur == 0) {
+        if (tieng->am_dau->len > 0) {
+            g_string_truncate(tieng->am_dau, tieng->am_dau->len - 1);
+        }
+    }
+}
+
 
 gchar* tieng_to_string(Tieng *tieng) {
     if (!tieng->valid) {

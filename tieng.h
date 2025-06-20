@@ -20,6 +20,8 @@ void tieng_free(Tieng *tieng);
 
 void tieng_append(Tieng *tieng, gchar c);
 
+void tieng_backspace(Tieng *tieng);
+
 gchar* tieng_to_string(Tieng *tieng);
 
 #endif

@@ -139,6 +139,7 @@ ibus_telex_engine_process_key_event(IBusEngine *engine,
         //     return FALSE;
 
         case IBUS_KEY_BackSpace:
+            if (telex->in_composition) return ibus_telex_engine_handle_backspace(telex);
             return FALSE;
     
 
@@ -271,16 +272,15 @@ ibus_telex_engine_commit_text(IBusTelexEngine *telex)
 static void ibus_telex_engine_update_preedit_text(IBusTelexEngine *telex) {
     gchar *raw = tieng_to_string(telex->tieng);
     gchar *buffer = g_utf8_normalize(raw, -1, G_NORMALIZE_NFC);
-    if (telex->tieng && g_utf8_strlen(buffer, - 1) > 0) {
+    if (telex->tieng) {
         IBusText *text = ibus_text_new_from_string(buffer);
-    
-        gchar *new_text = ibus_text_get_text(text);
-        gchar *new_str = g_strconcat(new_text, " ", NULL);
-        IBusText *new_text_obj = ibus_text_new_from_string(new_str);
 
-        ibus_engine_update_preedit_text((IBusEngine *)telex, new_text_obj, 
+        ibus_engine_update_preedit_text((IBusEngine *)telex, text, 
                                        g_utf8_strlen(buffer, - 1), TRUE);
-        ibus_engine_show_preedit_text((IBusEngine *)telex);
+        if (g_utf8_strlen(buffer, - 1) == 0) {
+            telex->in_composition = FALSE;
+            ibus_telex_engine_init_word(telex);
+        }
     }
     g_free(buffer);
     g_free(raw);
@@ -294,13 +294,14 @@ ibus_telex_engine_clear_buffer(IBusTelexEngine *telex)
     ibus_telex_engine_init_word(telex);
 }
 
-// static gboolean
-// ibus_telex_engine_handle_backspace(IBusTelexEngine *telex)
-// {
-//     ibus_telex_engine_clear_buffer(telex);
-//     ibus_engine_forward_key_event((IBusEngine *)telex, IBUS_KEY_BackSpace, 14, 0);
-//     return TRUE;
-// }
+static gboolean
+ibus_telex_engine_handle_backspace(IBusTelexEngine *telex)
+{
+    tieng_backspace(telex->tieng);
+
+    ibus_telex_engine_update_preedit_text(telex);
+    return TRUE;
+}
 
 
 static gboolean
